@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HabitForge — Build. Streak. Level Up.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- ░░ PARTICLE CANVAS ░░ -->
+<canvas id="particles"></canvas>
+
+<!-- ░░ AUTH SCREEN ░░ -->
+<div id="auth-screen" class="screen active">
+  <div class="auth-container">
+    <div class="auth-logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">HabitForge</span>
+    </div>
+    <p class="auth-tagline">Build habits. Earn XP. Level up your life.</p>
+
+    <div class="auth-tabs">
+      <button class="tab-btn active" data-tab="login">Login</button>
+      <button class="tab-btn" data-tab="signup">Sign Up</button>
+    </div>
+
+    <div id="login-form" class="auth-form active">
+      <div class="input-group">
+        <span class="input-icon">📧</span>
+        <input type="email" id="login-email" placeholder="Email address" autocomplete="email">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="login-password" placeholder="Password" autocomplete="current-password">
+      </div>
+      <button class="btn-primary" id="login-btn">
+        <span>Let's Go</span> <span class="btn-arrow">→</span>
+      </button>
+      <p class="auth-error" id="login-error"></p>
+    </div>
+
+    <div id="signup-form" class="auth-form">
+      <div class="input-group">
+        <span class="input-icon">👤</span>
+        <input type="text" id="signup-username" placeholder="Username" autocomplete="username">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">📧</span>
+        <input type="email" id="signup-email" placeholder="Email address" autocomplete="email">
+      </div>
+      <div class="input-group">
+        <span class="input-icon">🔒</span>
+        <input type="password" id="signup-password" placeholder="Password (min 6 chars)" autocomplete="new-password">
+      </div>
+      <button class="btn-primary" id="signup-btn">
+        <span>Create Account</span> <span class="btn-arrow">→</span>
+      </button>
+      <p class="auth-error" id="signup-error"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ░░ MAIN APP ░░ -->
+<div id="app-screen" class="screen">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="logo-icon-sm">⚡</span>
+      <span class="logo-text-sm">HabitForge</span>
+    </div>
+    <div class="topbar-right">
+      <div class="xp-pill">
+        <span class="xp-icon">⚡</span>
+        <span id="header-xp">0 XP</span>
+      </div>
+      <div class="level-pill">
+        <span>Lv.</span>
+        <span id="header-level">1</span>
+      </div>
+      <button class="avatar-btn" id="profile-nav-btn" title="Profile">
+        <span id="avatar-initial">?</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- PAGE CONTAINER -->
+  <div class="page-container">
+
+    <!-- ── DASHBOARD ── -->
+    <div id="page-dashboard" class="page active">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Today's Habits</h1>
+          <p class="page-subtitle" id="today-date"></p>
+        </div>
+        <button class="btn-add" id="add-habit-btn">＋ Add Habit</button>
+      </div>
+
+      <!-- XP Progress Bar -->
+      <div class="xp-progress-card">
+        <div class="xp-progress-header">
+          <span class="xp-level-label">Level <span id="dash-level">1</span></span>
+          <span class="xp-progress-label"><span id="dash-xp-current">0</span> / <span id="dash-xp-needed">100</span> XP</span>
+        </div>
+        <div class="xp-bar-track">
+          <div class="xp-bar-fill" id="dash-xp-bar"></div>
+        </div>
+        <p class="xp-next-level">Next level: <span id="dash-xp-remaining">100</span> XP away</p>
+      </div>
+
+      <!-- Habit List -->
+      <div class="habit-list" id="habit-list">
+        <div class="empty-state" id="empty-state">
+          <div class="empty-icon">🌱</div>
+          <h3>No habits yet</h3>
+          <p>Add your first habit and start your journey!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── STATS ── -->
+    <div id="page-stats" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Your Progress</h1>
+        <p class="page-subtitle">Weekly insights & analytics</p>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card accent-green">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="stat-best-streak">0</div>
+          <div class="stat-label">Best Streak</div>
+        </div>
+        <div class="stat-card accent-purple">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="stat-total">0</div>
+          <div class="stat-label">Total Done</div>
+        </div>
+        <div class="stat-card accent-blue">
+          <div class="stat-icon">📊</div>
+          <div class="stat-value" id="stat-rate">0%</div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+        <div class="stat-card accent-yellow">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-value" id="stat-level">1</div>
+          <div class="stat-label">Current Level</div>
+        </div>
+      </div>
+
+      <!-- Weekly Chart -->
+      <div class="chart-card">
+        <h3 class="chart-title">This Week</h3>
+        <div class="bar-chart" id="week-chart"></div>
+      </div>
+
+      <!-- XP Progress (stats page) -->
+      <div class="xp-progress-card">
+        <div class="xp-progress-header">
+          <span class="xp-level-label">Level <span id="stats-level">1</span></span>
+          <span class="xp-progress-label"><span id="stats-xp">0</span> Total XP</span>
+        </div>
+        <div class="xp-bar-track">
+          <div class="xp-bar-fill" id="stats-xp-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── GAMIFICATION ── -->
+    <div id="page-gamification" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Achievements</h1>
+        <p class="page-subtitle">Collect badges. Prove your dedication.</p>
+      </div>
+
+      <!-- Level Card -->
+      <div class="level-hero-card">
+        <div class="level-hero-number" id="game-level">1</div>
+        <div class="level-hero-label">LEVEL</div>
+        <div class="level-hero-xp"><span id="game-xp">0</span> XP Total</div>
+        <div class="xp-bar-track" style="margin-top:1rem;">
+          <div class="xp-bar-fill" id="game-xp-bar"></div>
+        </div>
+        <div class="level-hero-next">
+          <span id="game-xp-current">0</span> / <span id="game-xp-needed">100</span> XP to next level
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <h3 class="section-title">Badge Collection</h3>
+      <div class="badges-grid" id="badges-grid">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- ── PROFILE / SETTINGS ── -->
+    <div id="page-profile" class="page">
+      <div class="page-header">
+        <h1 class="page-title">Profile</h1>
+        <p class="page-subtitle" id="profile-username-display">@username</p>
+      </div>
+
+      <!-- All Habits Management -->
+      <div class="section-card">
+        <div class="section-card-header">
+          <h3>My Habits</h3>
+          <button class="btn-sm" id="profile-add-btn">＋ Add</button>
+        </div>
+        <div id="all-habits-list">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- Account -->
+      <div class="section-card" style="margin-top:1rem;">
+        <h3 style="margin-bottom:1rem;">Account</h3>
+        <div class="profile-info-row">
+          <span class="profile-info-label">Email</span>
+          <span class="profile-info-value" id="profile-email">—</span>
+        </div>
+        <button class="btn-danger" id="logout-btn">Log Out</button>
+      </div>
+    </div>
+
+  </div><!-- /page-container -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-page="dashboard">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-btn" data-page="stats">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Stats</span>
+    </button>
+    <button class="nav-btn" data-page="gamification">
+      <span class="nav-icon">🏆</span>
+      <span class="nav-label">Achieve</span>
+    </button>
+    <button class="nav-btn" data-page="profile">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Profile</span>
+    </button>
+  </nav>
+
+</div><!-- /app-screen -->
+
+<!-- ░░ MODALS ░░ -->
+
+<!-- Add / Edit Habit Modal -->
+<div class="modal-overlay" id="habit-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="habit-modal-title">Add Habit</h2>
+      <button class="modal-close" id="habit-modal-close">✕</button>
+    </div>
+
+    <div class="modal-body">
+      <!-- Icon picker -->
+      <div class="form-group">
+        <label class="form-label">Icon</label>
+        <div class="icon-picker" id="icon-picker">
+          <button class="icon-opt active" data-icon="⚡">⚡</button>
+          <button class="icon-opt" data-icon="💪">💪</button>
+          <button class="icon-opt" data-icon="📚">📚</button>
+          <button class="icon-opt" data-icon="🏃">🏃</button>
+          <button class="icon-opt" data-icon="🧘">🧘</button>
+          <button class="icon-opt" data-icon="💧">💧</button>
+          <button class="icon-opt" data-icon="🥗">🥗</button>
+          <button class="icon-opt" data-icon="😴">😴</button>
+          <button class="icon-opt" data-icon="🎯">🎯</button>
+          <button class="icon-opt" data-icon="🎨">🎨</button>
+          <button class="icon-opt" data-icon="🎵">🎵</button>
+          <button class="icon-opt" data-icon="✍️">✍️</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Habit Name</label>
+        <input type="text" class="form-input" id="habit-name" placeholder="e.g. Morning Run, Read 30 mins...">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Frequency</label>
+        <div class="freq-toggle">
+          <button class="freq-btn active" data-freq="daily">Daily</button>
+          <button class="freq-btn" data-freq="custom">Custom Days</button>
+        </div>
+      </div>
+
+      <div class="form-group" id="custom-days-group" style="display:none;">
+        <label class="form-label">Select Days</label>
+        <div class="days-picker">
+          <button class="day-btn" data-day="monday">Mon</button>
+          <button class="day-btn" data-day="tuesday">Tue</button>
+          <button class="day-btn" data-day="wednesday">Wed</button>
+          <button class="day-btn" data-day="thursday">Thu</button>
+          <button class="day-btn" data-day="friday">Fri</button>
+          <button class="day-btn" data-day="saturday">Sat</button>
+          <button class="day-btn" data-day="sunday">Sun</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Reminder Time <span class="optional">(optional)</span></label>
+        <input type="time" class="form-input" id="habit-reminder">
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-ghost" id="habit-modal-cancel">Cancel</button>
+      <button class="btn-primary" id="habit-modal-save">
+        <span id="save-btn-text">Add Habit</span> ✓
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Badge Unlock Modal -->
+<div class="modal-overlay" id="badge-modal">
+  <div class="modal badge-unlock-modal">
+    <div class="badge-unlock-glow"></div>
+    <div class="badge-unlock-icon" id="badge-unlock-icon">🏆</div>
+    <div class="badge-unlock-label">BADGE UNLOCKED!</div>
+    <div class="badge-unlock-name" id="badge-unlock-name">Week Warrior</div>
+    <div class="badge-unlock-desc" id="badge-unlock-desc">7-day streak achieved</div>
+    <button class="btn-primary" id="badge-modal-close">Awesome! 🎉</button>
+  </div>
+</div>
+
+<!-- Level Up Modal -->
+<div class="modal-overlay" id="levelup-modal">
+  <div class="modal levelup-modal">
+    <div class="levelup-stars">⭐⭐⭐</div>
+    <div class="levelup-text">LEVEL UP!</div>
+    <div class="levelup-number" id="levelup-number">2</div>
+    <div class="levelup-subtext">You're on fire! Keep going 🔥</div>
+    <button class="btn-primary" id="levelup-close">Let's Go!</button>
+  </div>
+</div>
+
+<!-- XP Float Container -->
+<div id="xp-floats"></div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
